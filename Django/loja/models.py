@@ -1,10 +1,19 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from uploader.models import Image
 
 class Item(models.Model):
     nome_item = models.CharField(max_length=255, default='')
     quantidade = models.IntegerField(default=0)
     valor = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    foto = models.ForeignKey(
+        Image,
+        related_name="+",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None,
+    )
     
     def __str__(self):
         return f'{self.nome_item} - {self.quantidade} - R${self.valor}'
