@@ -17,8 +17,8 @@ export default class LojaApi {
     const {data} = await axios.post("carrinho_itens/", item_carrinho);
     return data;
   }
-  async buscarItemEspecifico(item_carrinho) {
-    const {data} = await axios.get(`itens/${item_carrinho}`);
+  async removerItemCarrinho(id_item) {
+    const {data} = await axios.delete(`carrinho_itens/${id_item}`);
     return data;
   }
 }

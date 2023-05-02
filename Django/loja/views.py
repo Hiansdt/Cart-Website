@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from loja.models import Carrinho_Item, Item
 from rest_framework.viewsets import ModelViewSet
-from loja.serializers import ItemSerializer, Carrinho_ItemSerializer
+from loja.serializers import ItemSerializer, Carrinho_ItemSerializer, Carrinho_Item_DetailSerializer
 
 class ItemViewSet(ModelViewSet):
     queryset = Item.objects.all()
@@ -10,4 +10,7 @@ class ItemViewSet(ModelViewSet):
 
 class Carrinho_itemViewSet(ModelViewSet):
     queryset = Carrinho_Item.objects.all()
-    serializer_class = Carrinho_ItemSerializer
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return Carrinho_Item_DetailSerializer
+        return Carrinho_ItemSerializer
