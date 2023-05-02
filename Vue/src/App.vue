@@ -2,19 +2,21 @@
   <div>
     <div v-for="item of itens" :key="item.id">
       {{ item.nome_item }}
-      <br/>
+      <br />
       {{ item.valor }}
       <br>
       {{ item.id }}
       <img alt="">
+      <button @click="adicionarItemCarrinho(item.id)">Adicionar ao carrinho</button>
     </div>
     <div>
-      add item
-      <input type="text" placeholder="nome" v-model="nome_item">
-      <input type="number" placeholder="quantidade" v-model="quantidade_item">
-      <input type="number" placeholder="valor" v-model="valor_item">
+    </div>
 
-      <button @click="adicionarItem">Enviar</button>
+    <div>
+      carrinho
+      <div v-for="item of carrinho_itens">
+        {{ itens[item.item] }}
+      </div>
     </div>
   </div>
 </template>
@@ -26,15 +28,19 @@ import { ref, onMounted } from "vue";
 
 const lojaApi = new LojaApi();
 const itens = ref([]);
+const carrinho_itens = ref([])
 
 const nome_item = ref('')
 const id_item = ref('')
 const quantidade_item = ref('')
-const valor_item =  ref('')
+const valor_item = ref('')
+
+const quantidade_item_carrinho = ref('')
 
 onMounted(
   async function buscar() {
     itens.value = await lojaApi.buscarItens();
+    carrinho_itens.value = await lojaApi.buscarCarrinho();
   }
 )
 
@@ -45,5 +51,14 @@ async function adicionarItem() {
     valor: valor_item.value
   });
   itens.value = await lojaApi.buscarItens();
+}
+
+async function adicionarItemCarrinho(id) {
+  await lojaApi.adicionarCarrinho({
+    id: 1,
+    quantidade: 1,
+    item: id,
+  });
+  carrinho_itens.value = await lojaApi.buscarCarrinho();
 }
 </script>
