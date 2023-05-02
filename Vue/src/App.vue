@@ -7,14 +7,14 @@
       <br>
       {{ item.id }}
       <img alt="">
-      <button @click="adicionarItemCarrinho(item.id)">Adicionar ao carrinho</button>
+      <button @click="adicionarItemCarrinho(item)">Adicionar ao carrinho</button>
     </div>
     <div>
     </div>
 
     <div>
       carrinho
-      <div v-for="item of carrinho_itens">
+      <div v-for="item of carrinho_itens" :key="item.id">
         {{ itens[item.item] }}
       </div>
     </div>
@@ -34,6 +34,7 @@ const nome_item = ref('')
 const id_item = ref('')
 const quantidade_item = ref('')
 const valor_item = ref('')
+const response = ref('');
 
 const quantidade_item_carrinho = ref('')
 

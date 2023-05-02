@@ -15,7 +15,10 @@ export default class LojaApi {
   }
   async adicionarCarrinho(item_carrinho) {
     const {data} = await axios.post("carrinho_itens/", item_carrinho);
-    console.log(await axios.get(`itens/${item_carrinho.item}`).nome_item)
+    return data;
+  }
+  async buscarItemEspecifico(item_carrinho) {
+    const {data} = await axios.get(`itens/${item_carrinho}`);
     return data;
   }
 }
