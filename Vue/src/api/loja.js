@@ -21,4 +21,9 @@ export default class LojaApi {
     const {data} = await axios.delete(`carrinho_itens/${id_item}`);
     return data;
   }
+  async EditarItemCarrinho(id, item) {
+    const { data } = await axios.patch(`carrinho_itens/${id}/`, item);
+    return data;
+  }
+  
 }
