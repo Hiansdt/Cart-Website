@@ -7,8 +7,8 @@
         {{ item.item.nome_item }}
         ({{ item.quantidade }})
         <v-icon @click="removerItem(item.id)" class="excluir">mdi-delete</v-icon>
-        <v-icon @click="editarItem(item, item.quantidade += 1)"> mdi-plus </v-icon>
-        <v-icon @click="editarItem(item, item.quantidade -= 1)"> mdi-minus </v-icon>
+        <v-icon class="aumentar" @click="editarItem(item, item.quantidade += 1)"> mdi-plus </v-icon>
+        <v-icon class="diminuir" @click="editarItem(item, item.quantidade -= 1)"> mdi-minus </v-icon>
       </v-card>
     </v-navigation-drawer>
 
@@ -28,13 +28,15 @@
     <v-main>
       <v-container>
         <v-row>
-          <v-col v-for="item in itens" :key="item.id" cols="4">
-            <v-card height="300" :title="item.nome_item">
-              <img :src="item.foto.url" alt="" height="150">
+          <div class="item" v-for="item in itens" :key="item.id">
+            <p class="nome">{{ item.nome_item }}</p>
+            <div class="info">
+              <img :src="item.foto.url" alt="" height="150" width="150">
               <p>Estoque: {{ item.quantidade }}</p>
+              <P class="preco">R$ {{ item.valor }}</P>
               <v-btn @click="adicionarItemCarrinho(item)">Adicionar ao carrinho</v-btn>
-            </v-card>
-          </v-col>
+            </div>
+          </div>
         </v-row>
       </v-container>
     </v-main>
@@ -46,14 +48,13 @@
 
 import LojaApi from '@/api/loja';
 import { ref, onMounted } from "vue";
+import Swal from 'sweetalert2'
 
 const drawer = ref(false)
 
 const lojaApi = new LojaApi();
 const itens = ref([]);
 const carrinho_itens = ref([])
-
-const quantidade_item_carrinho = ref('')
 
 onMounted(
   async function buscar() {
@@ -82,7 +83,7 @@ async function adicionarItemCarrinho(item) {
     return false;
   };
   if (itemExists.value()) {
-    alert('Este item já está no carrinho!')
+    Swal.fire('Este item já está no carrinho!')
     return;
   } else {
     await lojaApi.adicionarCarrinho({
@@ -94,14 +95,34 @@ async function adicionarItemCarrinho(item) {
 }
 
 async function editarItem(item, valor) {
-  if ( valor <= item.item.quantidade) {
-    await lojaApi.EditarItemCarrinho(item.id, {
-      quantidade: valor,
-    });
+  if (valor <= item.item.quantidade) {
 
-    carrinho_itens.value = await lojaApi.buscarCarrinho();
+    if (valor > 0) {
+      await lojaApi.EditarItemCarrinho(item.id, {
+        quantidade: valor,
+      });
+
+      carrinho_itens.value = await lojaApi.buscarCarrinho();
+    } else {
+      Swal.fire({
+        title: 'Aviso',
+        text: 'Deseja remover o item do carrinho?',
+        icon: 'warning',
+        confirmButtonText: 'Remover do carrinho',
+        cancelButtonText: 'Cancelar',
+        showCancelButton: true,
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          removerItem(item.id)
+        } else if (result.isDenied) {
+          alert('a')
+        }
+      })
+      carrinho_itens.value = await lojaApi.buscarCarrinho();
+    }
   } else {
     console.log('a')
+    carrinho_itens.value = await lojaApi.buscarCarrinho();
   }
 }
 
@@ -109,16 +130,6 @@ async function removerItem(id) {
   await lojaApi.removerItemCarrinho(id);
   carrinho_itens.value = await lojaApi.buscarCarrinho();
 }
-
-// function estaNoCarrinho(id) {
-//   for (let item of carrinho_itens.value) {
-//     if (item.item.id == id) {
-//       return true
-//     } else {
-//       return false
-//     }
-//   }
-// }
 
 </script>
 
@@ -129,8 +140,44 @@ h2 {
   text-align: center;
 }
 
+.preco {
+  background-color: rgb(0, 221, 0);
+  width: 110px;
+  height: 25px;
+  text-align: center;
+  border-radius: 10px;
+  margin: 10px;
+}
+.info {
+  display: flex;
+  align-items: center;
+}
+
+.nome {
+  text-align: center;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.aumentar {
+  color: rgb(34, 229, 255);
+}
+
+.diminuir {
+  color: rgb(211, 0, 105);
+}
+
+.item {
+  margin: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 45%;
+  background-color: aliceblue;
+}
+
 .item_carrinho {
   margin-top: 5px;
+  background-color: rgb(194, 194, 194);
 }
 
 .excluir:hover {
