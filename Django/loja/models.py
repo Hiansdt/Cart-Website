@@ -21,7 +21,7 @@ class Item(models.Model):
 def validar_quantidade(quantia, item_id):
     item = Item.objects.get(id=item_id)
     if quantia <= 0:
-        raise ValidationError("A qunatidade tem que ser maior que 0!")
+        raise ValidationError("A quantidade tem que ser maior que 0!")
     elif quantia > item.quantidade:
         raise ValidationError("A quantia no carrinho não pode exceder a quantia do item disponível no estoque!")
 

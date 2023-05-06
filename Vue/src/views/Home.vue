@@ -2,14 +2,19 @@
   <v-app id="inspire">
 
     <v-navigation-drawer v-model="drawer" class="drawer" right>
-      <h2>Carrinho</h2>
-      <v-card v-for="item in carrinho_itens" :key="item.id" class="item_carrinho">
+      <h2>Carrinho | Total: {{ total }}</h2>
+      <div v-for="item in carrinho_itens" :key="item.id" class="item_carrinho">
+        <v-icon class="carrinho_icone">mdi-hanger</v-icon>
         {{ item.item.nome_item }}
-        ({{ item.quantidade }})
+        <div class="quantidade">
+          <v-icon class="quantidade-btn" size="20" @click="editarItem(item, item.quantidade += 1)"> mdi-chevron-up
+          </v-icon>
+          {{ item.quantidade }}
+          <v-icon class="quantidade-btn" size="20" @click="editarItem(item, item.quantidade -= 1)"> mdi-chevron-down
+          </v-icon>
+        </div>
         <v-icon @click="removerItem(item.id)" class="excluir">mdi-delete</v-icon>
-        <v-icon class="aumentar" @click="editarItem(item, item.quantidade += 1)"> mdi-plus </v-icon>
-        <v-icon class="diminuir" @click="editarItem(item, item.quantidade -= 1)"> mdi-minus </v-icon>
-      </v-card>
+      </div>
     </v-navigation-drawer>
 
     <v-app-bar app extended>
@@ -31,10 +36,10 @@
           <div class="item" v-for="item in itens" :key="item.id">
             <p class="nome">{{ item.nome_item }}</p>
             <div class="info">
-              <img :src="item.foto.url" alt="" height="150" width="150">
+              <img :src="item.foto.url" alt="" class="imagem">
               <p>Estoque: {{ item.quantidade }}</p>
               <P class="preco">R$ {{ item.valor }}</P>
-              <v-btn @click="adicionarItemCarrinho(item)">Adicionar ao carrinho</v-btn>
+              <v-btn @click="adicionarItemCarrinho(item)" class="add">Adicionar ao carrinho</v-btn>
             </div>
           </div>
         </v-row>
@@ -60,18 +65,23 @@ onMounted(
   async function buscar() {
     itens.value = await lojaApi.buscarItens();
     carrinho_itens.value = await lojaApi.buscarCarrinho();
+    calcularTotal()
   }
 )
 
-const itemExists = ref(false)
+const total = ref(0)
 
-// async function adicionarItemCarrinho(id) {
-//   await lojaApi.adicionarCarrinho({
-//     quantidade: 1,
-//     item: id,
-//   });
-//   carrinho_itens.value = await lojaApi.buscarCarrinho();
-// }
+function calcularTotal() {
+  total.value = 0.00;
+  for (let item of carrinho_itens.value) {
+    total.value += item.quantidade * item.item.valor;
+  }
+  total.value = total.value.toFixed(2);
+}
+
+calcularTotal();
+
+const itemExists = ref(false)
 
 async function adicionarItemCarrinho(item) {
   itemExists.value = () => {
@@ -92,6 +102,7 @@ async function adicionarItemCarrinho(item) {
     });
   }
   carrinho_itens.value = await lojaApi.buscarCarrinho();
+  calcularTotal();
 }
 
 async function editarItem(item, valor) {
@@ -103,6 +114,7 @@ async function editarItem(item, valor) {
       });
 
       carrinho_itens.value = await lojaApi.buscarCarrinho();
+      calcularTotal();
     } else {
       Swal.fire({
         title: 'Aviso',
@@ -119,6 +131,7 @@ async function editarItem(item, valor) {
         }
       })
       carrinho_itens.value = await lojaApi.buscarCarrinho();
+      calcularTotal();
     }
   } else {
     console.log('a')
@@ -129,6 +142,7 @@ async function editarItem(item, valor) {
 async function removerItem(id) {
   await lojaApi.removerItemCarrinho(id);
   carrinho_itens.value = await lojaApi.buscarCarrinho();
+  calcularTotal();
 }
 
 </script>
@@ -142,15 +156,32 @@ h2 {
 
 .preco {
   background-color: rgb(0, 221, 0);
-  width: 110px;
-  height: 25px;
+  width: 20%;
+  height: 5%;
   text-align: center;
   border-radius: 10px;
-  margin: 10px;
+  margin: 1%;
 }
+
+.carrinho_icone {
+  margin-right: 30px;
+}
+
+.quantidade {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  text-align: center;
+}
+
 .info {
   display: flex;
   align-items: center;
+}
+
+.imagem {
+  height: 100px;
+  width: 100px;
 }
 
 .nome {
@@ -159,16 +190,17 @@ h2 {
   font-size: larger;
 }
 
-.aumentar {
-  color: rgb(34, 229, 255);
+.add {
+  width: 40%;
+  font-size: 80%;
 }
 
-.diminuir {
-  color: rgb(211, 0, 105);
+.quantidade-btn {
+  size: x-small;
 }
 
 .item {
-  margin: 10px;
+  margin: 1%;
   align-items: center;
   justify-content: center;
   width: 45%;
@@ -178,10 +210,17 @@ h2 {
 .item_carrinho {
   margin-top: 5px;
   background-color: rgb(194, 194, 194);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .excluir:hover {
   color: rgb(255, 54, 54);
   cursor: pointer;
+}
+
+.excluir {
+  margin-left: 20px;
 }
 </style>

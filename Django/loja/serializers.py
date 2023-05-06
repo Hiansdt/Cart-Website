@@ -27,4 +27,4 @@ class Carrinho_Item_DetailSerializer(ModelSerializer):
     class Meta:
         model = Carrinho_Item
         fields = '__all__'
-        depth = 1
+        depth = 2
