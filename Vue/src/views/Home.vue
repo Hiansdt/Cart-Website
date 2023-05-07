@@ -13,6 +13,7 @@
           <v-icon class="quantidade-btn" size="20" @click="editarItem(item, item.quantidade -= 1)"> mdi-chevron-down
           </v-icon>
         </div>
+        R$ {{ (item.quantidade * item.item.valor).toFixed(2) }}
         <v-icon @click="removerItem(item.id)" class="excluir">mdi-delete</v-icon>
       </div>
     </v-navigation-drawer>
@@ -21,22 +22,24 @@
 
       <v-btn icon>
 
-        <v-icon @click="drawer = !drawer">
+        <v-icon @click="drawer = !drawer" size="50">
           mdi-cart
         </v-icon>
 
       </v-btn>
 
       <v-toolbar-title>Cavalo Variedades</v-toolbar-title>
+
+      <v-icon size="50"> mdi-account </v-icon>
     </v-app-bar>
 
     <v-main>
       <v-container>
         <v-row>
           <div class="item" v-for="item in itens" :key="item.id">
-            <p class="nome">{{ item.nome_item }}</p>
+            <img :src="item.foto.url" alt="" class="imagem">
             <div class="info">
-              <img :src="item.foto.url" alt="" class="imagem">
+              <p class="nome">{{ item.nome_item }}</p>
               <p>Estoque: {{ item.quantidade }}</p>
               <P class="preco">R$ {{ item.valor }}</P>
               <v-btn @click="adicionarItemCarrinho(item)" class="add">Adicionar ao carrinho</v-btn>
@@ -155,33 +158,41 @@ h2 {
 }
 
 .preco {
-  background-color: rgb(0, 221, 0);
-  width: 20%;
-  height: 5%;
+  background-color: #F8CBA6;
+  width: 50%;
+  height: 20%;
   text-align: center;
   border-radius: 10px;
   margin: 1%;
+  font-weight: bold;
+}
+
+.v-toolbar-title {
+  font-weight: 500;
+  font-size: x-large;
 }
 
 .carrinho_icone {
-  margin-right: 30px;
+  margin-right: 10px;
 }
 
 .quantidade {
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   text-align: center;
 }
 
 .info {
   display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .imagem {
-  height: 100px;
-  width: 100px;
+  height: 200px;
+  width: 200px;
 }
 
 .nome {
@@ -191,7 +202,7 @@ h2 {
 }
 
 .add {
-  width: 40%;
+  width: 90%;
   font-size: 80%;
 }
 
@@ -201,15 +212,17 @@ h2 {
 
 .item {
   margin: 1%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 45%;
-  background-color: aliceblue;
+  background-color: #FFE7CC;
 }
 
 .item_carrinho {
   margin-top: 5px;
-  background-color: rgb(194, 194, 194);
+  background-color: #F8CBA6;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -221,6 +234,7 @@ h2 {
 }
 
 .excluir {
-  margin-left: 20px;
+  margin-left: 10px;
 }
+
 </style>
