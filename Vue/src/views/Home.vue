@@ -2,23 +2,23 @@
   <v-app id="inspire">
 
     <v-navigation-drawer v-model="drawer" class="drawer" right>
-      <h2>Carrinho | Total: {{ total }}</h2>
+      <h2>Carrinho</h2>
       <div v-for="item in carrinho_itens" :key="item.id" class="item_carrinho">
         <v-icon class="carrinho_icone">mdi-hanger</v-icon>
-        {{ item.item.nome_item }}
+        <p class="nome_item_carrinho">{{ item.item.nome_item }}</p>
         <div class="quantidade">
           <v-icon class="quantidade-btn" size="20" @click="editarItem(item, item.quantidade += 1)"> mdi-chevron-up
           </v-icon>
-          {{ item.quantidade }}
+          <p>{{ item.quantidade }}</p>
           <v-icon class="quantidade-btn" size="20" @click="editarItem(item, item.quantidade -= 1)"> mdi-chevron-down
           </v-icon>
         </div>
-        R$ {{ (item.quantidade * item.item.valor).toFixed(2) }}
+        <p class="preco_item_carrinho"> R$ {{ (item.quantidade * item.item.valor).toFixed(2) }} </p>
         <v-icon @click="removerItem(item.id)" class="excluir">mdi-delete</v-icon>
       </div>
     </v-navigation-drawer>
 
-    <v-app-bar app extended>
+    <v-app-bar app>
 
       <v-btn icon>
 
@@ -28,7 +28,7 @@
 
       </v-btn>
 
-      <v-toolbar-title>Cavalo Variedades</v-toolbar-title>
+      <v-toolbar-title class="titulo">Cavalo Variedades <v-icon> mdi-horse-variant </v-icon> </v-toolbar-title>
 
       <v-icon size="50"> mdi-account </v-icon>
     </v-app-bar>
@@ -37,17 +37,22 @@
       <v-container>
         <v-row>
           <div class="item" v-for="item in itens" :key="item.id">
-            <img :src="item.foto.url" alt="" class="imagem">
-            <div class="info">
-              <p class="nome">{{ item.nome_item }}</p>
-              <p>Estoque: {{ item.quantidade }}</p>
-              <P class="preco">R$ {{ item.valor }}</P>
-              <v-btn @click="adicionarItemCarrinho(item)" class="add">Adicionar ao carrinho</v-btn>
+            <div class="item_inside">
+              <img :src="item.foto.url" alt="" class="imagem">
+              <div class="info">
+                <p class="nome">{{ item.nome_item }}</p>
+                <p>Estoque: {{ item.quantidade }}</p>
+                <P class="preco">R$ {{ item.valor }}</P>
+                <v-btn @click="adicionarItemCarrinho(item)" class="add">Adicionar ao carrinho</v-btn>
+              </div>
             </div>
           </div>
         </v-row>
       </v-container>
     </v-main>
+    <div class="total">
+      <p>Total: {{ total }}</p>
+    </div>
   </v-app>
 </template>
 
@@ -151,6 +156,12 @@ async function removerItem(id) {
 </script>
 
 <style scoped>
+.titulo {
+  font-family: 'lato' !important;
+  text-align: center;
+  font-size: xx-large !important;
+}
+
 h2 {
   font-weight: 500;
   font-size: larger;
@@ -158,13 +169,18 @@ h2 {
 }
 
 .preco {
-  background-color: #F8CBA6;
   width: 50%;
   height: 20%;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 15px;
   margin: 1%;
   font-weight: bold;
+  background-color: #ffffff;
+  box-shadow: 1px 1px 5px;
+}
+
+.item_inside {
+  padding: 2%;
 }
 
 .v-toolbar-title {
@@ -172,8 +188,31 @@ h2 {
   font-size: x-large;
 }
 
+.total {
+  position: fixed;
+  background-color: #F8CBA6;
+  bottom: 10px;
+  right: 10px;
+  width: fit-content;
+  border-radius: 20px;
+  font-size: larger;
+  font-weight: 700;
+  padding: 5px;
+}
+
 .carrinho_icone {
-  margin-right: 10px;
+  position: fixed;
+  left: 5%;
+}
+
+.nome_item_carrinho {
+  position: fixed;
+  left: 17%;
+}
+
+.preco_item_carrinho {
+  position: fixed;
+  left: 60%;
 }
 
 .quantidade {
@@ -182,6 +221,8 @@ h2 {
   margin-left: 10px;
   margin-right: 10px;
   text-align: center;
+  position: fixed;
+  left: 40%;
 }
 
 .info {
@@ -215,9 +256,10 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   width: 45%;
-  background-color: #FFE7CC;
+  background-color: #f0f0f0;
+  box-shadow: 5px 5px 5px grey;
 }
 
 .item_carrinho {
@@ -226,6 +268,9 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 8%;
 }
 
 .excluir:hover {
@@ -234,7 +279,7 @@ h2 {
 }
 
 .excluir {
-  margin-left: 10px;
+  position: fixed;
+  right: 2%;
 }
-
 </style>
