@@ -3,6 +3,7 @@
 
     <v-navigation-drawer v-model="drawer" class="drawer" right>
       <h2>Carrinho</h2>
+      <hr>
       <div v-for="item in carrinho_itens" :key="item.id" class="item_carrinho">
         <v-icon class="carrinho_icone">mdi-hanger</v-icon>
         <p class="nome_item_carrinho">{{ item.item.nome_item }}</p>
@@ -101,7 +102,11 @@ async function adicionarItemCarrinho(item) {
     return false;
   };
   if (itemExists.value()) {
-    Swal.fire('Este item já está no carrinho!')
+    Swal.fire({
+      text: "Este Item já está no carrinho!",
+      confirmButtonText: "Entendido",
+      confirmButtonColor: 'black',
+    })
     return;
   } else {
     await lojaApi.adicionarCarrinho({
@@ -131,6 +136,8 @@ async function editarItem(item, valor) {
         confirmButtonText: 'Remover do carrinho',
         cancelButtonText: 'Cancelar',
         showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonColor: 'black',
       }).then(function (result) {
         if (result.isConfirmed) {
           removerItem(item.id)
@@ -166,6 +173,8 @@ h2 {
   font-weight: 500;
   font-size: larger;
   text-align: center;
+  font-family: 'lato';
+  font-weight: 600;
 }
 
 .preco {
@@ -175,8 +184,8 @@ h2 {
   border-radius: 15px;
   margin: 1%;
   font-weight: bold;
-  background-color: #ffffff;
-  box-shadow: 1px 1px 5px;
+  background-color: #2e2e2e;
+  color: white;
 }
 
 .item_inside {
@@ -190,7 +199,7 @@ h2 {
 
 .total {
   position: fixed;
-  background-color: #F8CBA6;
+  background-color: #da9f6f;
   bottom: 10px;
   right: 10px;
   width: fit-content;
@@ -234,21 +243,33 @@ h2 {
 .imagem {
   height: 200px;
   width: 200px;
+  border-bottom: 1px solid;
 }
 
 .nome {
   text-align: center;
   font-weight: bold;
   font-size: larger;
+  border-bottom: 1px solid;
 }
 
 .add {
   width: 90%;
   font-size: 80%;
+  background-color: #131313;
+  color: white;
+}
+
+.add:hover{
+  transform: scale(1.05);
 }
 
 .quantidade-btn {
   size: x-small;
+}
+
+.quantidade-btn:hover {
+  transform: scale(1.15);
 }
 
 .item {
@@ -264,18 +285,22 @@ h2 {
 
 .item_carrinho {
   margin-top: 5px;
-  background-color: #F8CBA6;
+  background-color: #131313;
+  color: rgb(221, 221, 221);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-left: 5px;
   margin-right: 5px;
   height: 8%;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 600;
 }
 
 .excluir:hover {
   color: rgb(255, 54, 54);
   cursor: pointer;
+  transform: scale(1.2);
 }
 
 .excluir {
