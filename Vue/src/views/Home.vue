@@ -1,9 +1,11 @@
 <template>
   <v-app id="inspire">
 
-    <v-navigation-drawer v-model="drawer" class="drawer" right>
-      <h2>Carrinho</h2>
-      <hr>
+    <v-navigation-drawer v-model="drawer" class="drawer" :width="400" floating>
+      <div class="carrinho_nome">
+        <h2>Carrinho</h2>
+        <p class="total">Total: R$ {{ total }}</p>
+      </div>
       <div v-for="item in carrinho_itens" :key="item.id" class="item_carrinho">
         <v-icon class="carrinho_icone">mdi-hanger</v-icon>
         <p class="nome_item_carrinho">{{ item.item.nome_item }}</p>
@@ -51,9 +53,6 @@
         </v-row>
       </v-container>
     </v-main>
-    <div class="total">
-      <p>Total: {{ total }}</p>
-    </div>
   </v-app>
 </template>
 
@@ -169,13 +168,21 @@ async function removerItem(id) {
   font-size: xx-large !important;
 }
 
-h2 {
+.carrinho_nome {
   font-weight: 500;
-  font-size: larger;
+  font-size: small;
   text-align: center;
   font-family: 'lato';
   font-weight: 600;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 4px 5px rgb(156, 156, 156);
+  height: 64px;
+  border-right: 1px solid grey;
 }
+
 
 .preco {
   width: 50%;
@@ -198,13 +205,11 @@ h2 {
 }
 
 .total {
-  position: fixed;
-  background-color: #da9f6f;
-  bottom: 10px;
-  right: 10px;
+  background-color: #000000;
+  color: white;
   width: fit-content;
   border-radius: 20px;
-  font-size: larger;
+  font-size: small;
   font-weight: 700;
   padding: 5px;
 }
@@ -250,7 +255,6 @@ h2 {
   text-align: center;
   font-weight: bold;
   font-size: larger;
-  border-bottom: 1px solid;
 }
 
 .add {
@@ -260,7 +264,7 @@ h2 {
   color: white;
 }
 
-.add:hover{
+.add:hover {
   transform: scale(1.05);
 }
 
@@ -284,17 +288,16 @@ h2 {
 }
 
 .item_carrinho {
-  margin-top: 5px;
-  background-color: #131313;
-  color: rgb(221, 221, 221);
+  margin: 15px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 5px;
-  margin-right: 5px;
-  height: 9%;
+  height: 7%;
   font-family: 'Times New Roman', Times, serif;
   font-weight: 600;
+  box-shadow: 2px 2px 5px rgb(83, 83, 83);
 }
 
 .excluir:hover {
@@ -305,6 +308,6 @@ h2 {
 
 .excluir {
   position: fixed;
-  right: 2%;
+  right: 5%;
 }
 </style>
