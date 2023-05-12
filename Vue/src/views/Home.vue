@@ -292,7 +292,7 @@ h2 {
   justify-content: center;
   margin-left: 5px;
   margin-right: 5px;
-  height: 8%;
+  height: 9%;
   font-family: 'Times New Roman', Times, serif;
   font-weight: 600;
 }
